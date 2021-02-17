@@ -94,7 +94,7 @@ cat <<-'EOF'
   |____/|____/|_| \_|____/ |_| \___/   ....is now installed!
 
 
-  这里写一些需要显示的字，或者删除.
+  感谢使用 DDNSTO，请登录 https://www.ddnsto.com 获取 token 填入插件
 
 EOF
 printf "$RESET"
