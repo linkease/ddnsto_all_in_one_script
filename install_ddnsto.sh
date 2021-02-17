@@ -4,7 +4,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
 version="1.0"
-APP_URL='https://firmware.koolshare.cn/binary/ddnsto/openwrt'
+APP_URL='http://firmware.koolshare.cn/binary/ddnsto/openwrt'
 app_arm='ddnsto-arm.ipk'
 app_mips='ddnsto-mipsel.ipk'
 app_x86='ddnsto-x86.ipk'
