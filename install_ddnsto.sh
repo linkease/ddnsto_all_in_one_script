@@ -5,11 +5,12 @@ export PATH
 
 version="1.0"
 APP_URL='http://firmware.koolshare.cn/binary/ddnsto/openwrt'
-app_arm='ddnsto-arm.ipk'
-app_mips='ddnsto-mipsel.ipk'
-app_x86='ddnsto-x86.ipk'
-app_ui='luci-app-ddnsto_1.0.0-1_all.ipk'
-app_lng='luci-i18n-ddnsto-zh-cn_1.0.0-1_all.ipk'
+app_arm='ddnsto_arm.ipk'
+app_aarch64='ddnsto_aarch64.ipk'
+app_mips='ddnsto_mipsel.ipk'
+app_x86='ddnsto_x86_64.ipk'
+app_ui='luci-app-ddnsto.ipk'
+app_lng='luci-i18n-ddnsto-zh-cn.ipk'
 
 setup_color() {
     # Only use colors if connected to a terminal
@@ -48,7 +49,7 @@ Download_Files(){
 }
 
 clean_app(){
-    rm -f /tmp/${app_x86} /tmp/${app_arm} /tmp/${app_mips} /tmp/${app_ui} /tmp/${app_lng}
+    rm -f /tmp/${app_x86} /tmp/${app_arm} /tmp/${app_aarch64} /tmp/${app_mips} /tmp/${app_ui} /tmp/${app_lng}
 }
 
 command_exists opkg || {
@@ -65,7 +66,7 @@ if echo `uname -m` | grep -Eqi 'x86_64'; then
       opkg install /tmp/${app_x86};
       opkg install /tmp/${app_ui};
       opkg install /tmp/${app_lng}; )
-elif  echo `uname -m` | grep -Eqi 'arm|aarch64'; then
+elif  echo `uname -m` | grep -Eqi 'arm'; then
     arch='arm'
     ( set -x; Download_Files ${APP_URL}/${app_arm} /tmp/${app_arm};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
@@ -73,7 +74,15 @@ elif  echo `uname -m` | grep -Eqi 'arm|aarch64'; then
       opkg install /tmp/${app_arm};
       opkg install /tmp/${app_ui};
       opkg install /tmp/${app_lng}; )
-elif  echo `uname -m` | grep -Eqi 'mipsel'; then
+elif  echo `uname -m` | grep -Eqi 'aarch64'; then
+    arch='aarch64'
+    ( set -x; Download_Files ${APP_URL}/${app_aarch64} /tmp/${app_aarch64};
+      Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
+      Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng};
+      opkg install /tmp/${app_aarch64};
+      opkg install /tmp/${app_ui};
+      opkg install /tmp/${app_lng}; )
+elif  echo `uname -m` | grep -Eqi 'mipsel|mips'; then
     arch='mips'
     ( set -x; Download_Files ${APP_URL}/${app_mips} /tmp/${app_mips};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
