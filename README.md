@@ -12,14 +12,16 @@
 ## 新的安装方式如下
 
 ### via curl
-``Bash
+```
 sh -c "$(curl -sSL http://firmware.koolshare.cn/binary/ddnsto/openwrt/install_ddnsto.sh)"
-``
+```
+
 ### via wget
-``Bash
+```
 sh -c "$(wget --no-check-certificate -qO- http://firmware.koolshare.cn/binary/ddnsto/openwrt/install_ddnsto.sh)"
-``
+```
+
 #### Or
-``Bash
+```
 cd /tmp; wget --no-check-certificate http://firmware.koolshare.cn/binary/ddnsto/openwrt/install_ddnsto.sh; sh ./install_ddnsto.sh
 ```
