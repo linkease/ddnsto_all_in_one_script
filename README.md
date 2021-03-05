@@ -24,5 +24,6 @@ sh -c "$(wget --no-check-certificate -qO- http://firmware.koolshare.cn/binary/dd
 cd /tmp; wget --no-check-certificate http://firmware.koolshare.cn/binary/ddnsto/openwrt/install_ddnsto.sh; sh ./install_ddnsto.sh
 ```
 # 使用方法教程
-- ddnsto官方教程 ：[**👉点击链接👈**](https://www.ddnsto.com/zh/guide/quick.html#%E5%AE%89%E8%A3%85%E4%B8%89%E6%AD%A5%E8%B5%B0)
-- YouTube教程 : [**👉点击链接👈**](https://www.youtube.com/watch?v=nwf__oD9Z_8)
+- ddnsto官方教程：[**👉点击链接👈**](https://www.ddnsto.com/zh/guide/quick.html#%E5%AE%89%E8%A3%85%E4%B8%89%E6%AD%A5%E8%B5%B0)
+- 哔哩哔哩教程：[**👉点击链接👈**](https://www.bilibili.com/video/BV1E5411K7MB/)
+- YouTube教程：[**👉点击链接👈**](https://www.youtube.com/watch?v=nwf__oD9Z_8)
