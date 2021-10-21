@@ -63,6 +63,7 @@ if echo `uname -m` | grep -Eqi 'x86_64'; then
     ( set -x; Download_Files ${APP_URL}/${app_x86} /tmp/${app_x86};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
       Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng};
+      opkg remove luci-i18n-ddnsto-zh-cn luci-app-ddnsto ddnsto
       opkg install /tmp/${app_x86};
       opkg install /tmp/${app_ui};
       opkg install /tmp/${app_lng}; )
@@ -71,6 +72,7 @@ elif  echo `uname -m` | grep -Eqi 'arm'; then
     ( set -x; Download_Files ${APP_URL}/${app_arm} /tmp/${app_arm};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
       Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng};
+      opkg remove luci-i18n-ddnsto-zh-cn luci-app-ddnsto ddnsto
       opkg install /tmp/${app_arm};
       opkg install /tmp/${app_ui};
       opkg install /tmp/${app_lng}; )
@@ -79,6 +81,7 @@ elif  echo `uname -m` | grep -Eqi 'aarch64'; then
     ( set -x; Download_Files ${APP_URL}/${app_aarch64} /tmp/${app_aarch64};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
       Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng};
+      opkg remove luci-i18n-ddnsto-zh-cn luci-app-ddnsto ddnsto
       opkg install /tmp/${app_aarch64};
       opkg install /tmp/${app_ui};
       opkg install /tmp/${app_lng}; )
@@ -87,6 +90,7 @@ elif  echo `uname -m` | grep -Eqi 'mipsel|mips'; then
     ( set -x; Download_Files ${APP_URL}/${app_mips} /tmp/${app_mips};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
       Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng};
+      opkg remove luci-i18n-ddnsto-zh-cn luci-app-ddnsto ddnsto
       opkg install /tmp/${app_mips};
       opkg install /tmp/${app_ui};
       opkg install /tmp/${app_lng}; )
