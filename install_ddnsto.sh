@@ -58,6 +58,8 @@ command_exists opkg || {
     exit 1
 }
 
+opkg install luci-compat || true
+
 if echo `uname -m` | grep -Eqi 'x86_64'; then
     arch='x86_64'
     ( set -x; Download_Files ${APP_URL}/${app_x86} /tmp/${app_x86};
