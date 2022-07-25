@@ -9,6 +9,7 @@ app_arm='ddnsto_arm.ipk'
 app_aarch64='ddnsto_aarch64.ipk'
 app_mips='ddnsto_mipsel.ipk'
 app_x86='ddnsto_x86_64.ipk'
+app_binary='ddnsto.ipk'
 app_ui='luci-app-ddnsto.ipk'
 app_lng='luci-i18n-ddnsto-zh-cn.ipk'
 
@@ -48,8 +49,33 @@ Download_Files(){
   fi
 }
 
+remove_deprecated(){
+  if echo `cat /etc/config/ddnsto` | grep -Eqi 'global'; then
+    rm /etc/config/ddnsto
+  fi
+}
+
 clean_app(){
-    rm -f /tmp/${app_x86} /tmp/${app_arm} /tmp/${app_aarch64} /tmp/${app_mips} /tmp/${app_ui} /tmp/${app_lng}
+    rm -f /tmp/${app_binary} /tmp/${app_ui} /tmp/${app_lng}
+}
+
+fork_ugprade() {
+
+cat <<\EOF >/tmp/.ddnsto-upgrade.sh
+#!/bin/sh
+
+      app_binary='ddnsto.ipk'
+      app_ui='luci-app-ddnsto.ipk'
+      app_lng='luci-i18n-ddnsto-zh-cn.ipk'
+      opkg remove app-meta-ddnsto luci-i18n-ddnsto-zh-cn luci-app-ddnsto ddnsto
+      opkg install /tmp/${app_binary}
+      opkg install /tmp/${app_ui}
+      opkg install /tmp/${app_lng}
+      rm -f /tmp/${app_binary} /tmp/${app_ui} /tmp/${app_lng}
+EOF
+
+chmod 755 /tmp/.ddnsto-upgrade.sh
+
 }
 
 command_exists opkg || {
@@ -62,44 +88,55 @@ opkg install luci-compat || true
 
 if echo `uname -m` | grep -Eqi 'x86_64'; then
     arch='x86_64'
-    ( set -x; Download_Files ${APP_URL}/${app_x86} /tmp/${app_x86};
+    ( set -x; Download_Files ${APP_URL}/${app_x86} /tmp/${app_binary};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
-      Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng};
-      opkg remove luci-i18n-ddnsto-zh-cn luci-app-ddnsto ddnsto
-      opkg install /tmp/${app_x86};
-      opkg install /tmp/${app_ui};
-      opkg install /tmp/${app_lng}; )
+      Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng}; )
 elif  echo `uname -m` | grep -Eqi 'arm'; then
     arch='arm'
-    ( set -x; Download_Files ${APP_URL}/${app_arm} /tmp/${app_arm};
+    ( set -x; Download_Files ${APP_URL}/${app_arm} /tmp/${app_binary};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
-      Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng};
-      opkg remove luci-i18n-ddnsto-zh-cn luci-app-ddnsto ddnsto
-      opkg install /tmp/${app_arm};
-      opkg install /tmp/${app_ui};
-      opkg install /tmp/${app_lng}; )
+      Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng}; )
 elif  echo `uname -m` | grep -Eqi 'aarch64'; then
     arch='aarch64'
-    ( set -x; Download_Files ${APP_URL}/${app_aarch64} /tmp/${app_aarch64};
+    ( set -x; Download_Files ${APP_URL}/${app_aarch64} /tmp/${app_binary};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
-      Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng};
-      opkg remove luci-i18n-ddnsto-zh-cn luci-app-ddnsto ddnsto
-      opkg install /tmp/${app_aarch64};
-      opkg install /tmp/${app_ui};
-      opkg install /tmp/${app_lng}; )
+      Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng}; )
 elif  echo `uname -m` | grep -Eqi 'mipsel|mips'; then
     arch='mips'
-    ( set -x; Download_Files ${APP_URL}/${app_mips} /tmp/${app_mips};
+    ( set -x; Download_Files ${APP_URL}/${app_mips} /tmp/${app_binary};
       Download_Files ${APP_URL}/${app_ui} /tmp/${app_ui};
-      Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng};
-      opkg remove luci-i18n-ddnsto-zh-cn luci-app-ddnsto ddnsto
-      opkg install /tmp/${app_mips};
-      opkg install /tmp/${app_ui};
-      opkg install /tmp/${app_lng}; )
+      Download_Files ${APP_URL}/${app_lng} /tmp/${app_lng}; )
 else
     error "The program only supports Openwrt."
     exit 1
 fi
+
+rm -f /tmp/.ddnsto-upgrade.pid
+remove_deprecated
+fork_ugprade
+
+if which start-stop-daemon >/dev/null; then
+  echo "fork to install, version is:"
+  start-stop-daemon -S -b -q -m -x /tmp/.ddnsto-upgrade.sh -p /tmp/.ddnsto-upgrade.pid
+  sleep 3
+  if [ -f /tmp/.ddnsto-upgrade.pid ]; then
+
+    PID=`cat /tmp/.ddnsto-upgrade.pid`
+    if test -d /proc/"${PID}"/; then
+      echo "waiting to finish"
+      sleep 5
+    fi
+
+  fi
+else
+  echo "install, version is:"
+  /tmp/.ddnsto-upgrade.sh
+fi
+
+ddnsto -v
+RET=$?
+if [ "${RET}" = "1" ]; then
+
 printf "$GREEN"
 cat <<-'EOF'
   ____  ____  _   _ ____ _____ ___
@@ -113,5 +150,8 @@ cat <<-'EOF'
 
 EOF
 printf "$RESET"
-clean_app
+
+else
+  error "cannot install ddnsto, ret=${RET}"
+fi
 
