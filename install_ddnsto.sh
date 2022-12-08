@@ -1,8 +1,5 @@
 #!/bin/sh
 
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
-export PATH
-
 version="1.0"
 APP_URL='http://fw.koolcenter.com/binary/ddnsto/openwrt'
 app_arm='ddnsto_arm.ipk'
@@ -45,7 +42,7 @@ Download_Files(){
   if command_exists curl; then
     curl -sSLk ${URL} -o ${FileName}
   elif command_exists wget; then
-    wget -c --progress=bar:force --prefer-family=IPv4 --no-check-certificate ${URL} -O ${FileName}
+    wget -c --no-check-certificate ${URL} -O ${FileName}
   fi
 }
 
