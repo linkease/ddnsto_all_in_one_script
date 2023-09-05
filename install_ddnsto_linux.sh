@@ -1,5 +1,8 @@
 #!/bin/sh
 
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
 version="1.0"
 APP_URL='https://fw.koolcenter.com/binary/ddnsto/linux'
 app_aarch64='ddnsto.arm64'
@@ -16,12 +19,11 @@ error() {
     echo ${RED}"Error: $@"${RESET} >&2
 }
 
-UID=`id -u`
+CURR_UID=`id -u`
 SUDO=
 
-if [ "${UID}" = "0" ]] ; then
+if [ "${CURR_UID}" = "0" ] ; then
   echo "run as root"
-  SUDO=time
 else
   echo "use sudo"
   SUDO=sudo
@@ -33,7 +35,7 @@ Download_Files(){
   if command_exists curl; then
     curl -sSLk ${URL} -o ${FileName}
   elif command_exists wget; then
-    wget -c --no-check-certificate ${URL} -O ${FileName}
+    wget -c --progress=bar:force --prefer-family=IPv4 --no-check-certificate ${URL} -O ${FileName}
   fi
 }
 
@@ -57,5 +59,5 @@ fi
 ${SUDO} chmod +x $bin_path
 ${SUDO} ddnsto -u $token -daemon
 
-echo "stop ddnsto service command: systemctl stop com.linkease.ddnstoshell"
+echo "command to stop ddnsto service: systemctl stop com.linkease.ddnstoshell"
 
