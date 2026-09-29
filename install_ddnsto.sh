@@ -8,19 +8,19 @@ ZSETUP_BIN="$ZSETUP_DIR/zsetup"
 case "$(uname -m)" in
     x86_64|amd64)
         artifact='zsetup-linux-x86_64'
-        expected='9ddb0cc3f80da4b83d278fcf77069b0ce4a354ef04d05a6c3aa4b1971528966f'
+        expected='c726dec4b211c1da786424e6f819faa208b28f2342f3a44ab6a649223d09e3a2'
         ;;
     aarch64|arm64)
         artifact='zsetup-linux-aarch64'
-        expected='92db19c6730d4239e46bf4180578b43936eab5f9fce02812250bb25f398acfac'
+        expected='b8eae214bb0a22f5d5405d11c148cf954e339bdb6721dd8dfc7a0d4445ff6ed2'
         ;;
     armv7*|armv8l)
         artifact='zsetup-linux-armv7'
-        expected='64c1adf4f2e6f94d9348f412bc707d500179734aa5a21e4e4e8ba5fc60584e9c'
+        expected='4189a9bc8bd1a44e6bf78091b4bb453d7cad53db07ac76f692bba6aa94e8c252'
         ;;
     mipsel|mipsle)
         artifact='zsetup-linux-mipsel'
-        expected='8ab2a233d35aa533d184d6b25168431865e7d0ed98f4ff7b798ca881fc074e90'
+        expected='23eba6b50a94316cc511febcceac88055bfe2fdb9665a9725a5dcc475c5e1e55'
         ;;
     *) echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
 esac
