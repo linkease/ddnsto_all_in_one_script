@@ -25,8 +25,8 @@ case "$(uname -m)" in
     *) echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
 esac
 
-primary="https://fw.koolcenter.com/binary/zsetup/releases/$ZSETUP_VERSION/$artifact"
-backup="https://fw0.koolcenter.com/binary/zsetup/releases/$ZSETUP_VERSION/$artifact"
+primary="https://fw.koolcenter.com/binary/zsetup/$ZSETUP_VERSION/$artifact"
+backup="https://fw0.koolcenter.com/binary/zsetup/$ZSETUP_VERSION/$artifact"
 temporary="$ZSETUP_BIN.tmp.$$"
 trap 'rm -f "$temporary"' EXIT HUP INT TERM
 
