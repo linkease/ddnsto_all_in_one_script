@@ -8,6 +8,8 @@ trap 'rm -rf "$tmp"' EXIT HUP INT TERM
 
 expected=$(sha256sum "$release_dir/zsetup-linux-x86_64" | awk '{print $1}')
 grep -Fq "expected='$expected'" "$root/install_ddnsto.sh"
+grep -Fq 'binary/zsetup/$ZSETUP_VERSION/$artifact' "$root/install_ddnsto.sh"
+! grep -Fq 'binary/zsetup/releases/' "$root/install_ddnsto.sh"
 ! grep -Eq 'start-stop-daemon|(^|[^a-z])(curl|wget)([^a-z]|$)' "$root/install_ddnsto_business.sh"
 
 cat > "$tmp/zsetup" <<'EOF'
