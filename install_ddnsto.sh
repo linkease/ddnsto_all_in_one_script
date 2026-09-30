@@ -25,8 +25,6 @@ case "$(uname -m)" in
     *) echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
 esac
 
-primary="https://fw.koolcenter.com/binary/zsetup/$ZSETUP_VERSION/$artifact"
-backup="https://fw0.koolcenter.com/binary/zsetup/$ZSETUP_VERSION/$artifact"
 temporary="$ZSETUP_BIN.tmp.$$"
 trap 'rm -f "$temporary"' EXIT HUP INT TERM
 
@@ -42,10 +40,25 @@ download() {
     fi
 }
 
-download "$primary" || download "$backup"
 command -v sha256sum >/dev/null 2>&1 || { echo "sha256sum is required" >&2; exit 1; }
-actual=$(sha256sum "$temporary" | awk '{print $1}')
-[ "$actual" = "$expected" ] || { echo "zsetup SHA-256 mismatch" >&2; exit 1; }
+download_verified() {
+    for base in \
+        'https://dl.istoreos.com' \
+        'https://fw.d4ctech.com' \
+        'https://fw20.koolcenter.com' \
+        'https://fw.koolcenter.com'
+    do
+        rm -f "$temporary"
+        if download "$base/binary/zsetup/$ZSETUP_VERSION/$artifact"; then
+            actual=$(sha256sum "$temporary" | awk '{print $1}')
+            [ "$actual" = "$expected" ] && return 0
+            echo "zsetup SHA-256 mismatch from $base; trying next source" >&2
+        fi
+    done
+    return 1
+}
+
+download_verified || { echo "Unable to download a verified zsetup binary" >&2; exit 1; }
 chmod 0755 "$temporary"
 mv -f "$temporary" "$ZSETUP_BIN"
 trap - EXIT HUP INT TERM

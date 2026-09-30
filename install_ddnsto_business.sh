@@ -1,8 +1,10 @@
 #!/bin/sh
 set -eu
 
-APP_URL_PRIMARY='https://fw.koolcenter.com/binary/ddnsto/openwrt'
-APP_URL_BACKUP='https://fw0.koolcenter.com/binary/ddnsto/openwrt'
+APP_URL_PRIMARY_1='https://dl.istoreos.com/binary/ddnsto/openwrt'
+APP_URL_PRIMARY_2='https://fw.d4ctech.com/binary/ddnsto/openwrt'
+APP_URL_PRIMARY_3='https://fw20.koolcenter.com/binary/ddnsto/openwrt'
+APP_URL_FALLBACK='https://fw.koolcenter.com/binary/ddnsto/openwrt'
 ZSETUP_BIN=${ZSETUP_BIN:-zsetup}
 
 app_ui='luci-app-ddnsto.ipk'
@@ -18,8 +20,10 @@ download_file() {
     output=$2
     "$ZSETUP_BIN" download \
         -o "$output" \
-        "$APP_URL_PRIMARY/$remote_name" \
-        "$APP_URL_BACKUP/$remote_name"
+        --fallback-url "$APP_URL_FALLBACK/$remote_name" \
+        "$APP_URL_PRIMARY_1/$remote_name" \
+        "$APP_URL_PRIMARY_2/$remote_name" \
+        "$APP_URL_PRIMARY_3/$remote_name"
 }
 
 cleanup() {
